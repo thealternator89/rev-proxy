@@ -7,9 +7,12 @@ function collect(value, previous) {
   return [...previous, value];
 }
 
-const version = require('../package.json').version;
+const packageJson = require("../package.json");
+const version = packageJson.version;
+const name = packageJson.name;
 
 program
+  .name(name)
   .version(version)
   .requiredOption(
     "-p, --port <number>",
