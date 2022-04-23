@@ -1,7 +1,8 @@
-import Koa from 'koa';
-import axios from 'axios';
+import Koa, { HttpError } from "koa";
+import http from "http";
+import axios from "axios";
 
-import { Output } from './output';
+import { Output } from "./output";
 
 export class Server {
   private app: Koa;
@@ -15,7 +16,15 @@ export class Server {
   public up() {
     this.app = new Koa();
     this.app.use((ctx) => this.proxyRequest(ctx));
-    this.app.listen(this.port, () =>
+
+    const server = http.createServer(this.app.callback());
+    server.on("error", (error) => {
+      Output.Error(
+        `Error mapping port ${this.port} to ${this.remote}: ${error.message}`
+      );
+    });
+
+    server.listen(this.port, () =>
       Output.Print(
         `Proxying HTTP on port ${this.port} to ${this.remote} (${this.contextId}-)`
       )

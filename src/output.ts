@@ -14,7 +14,7 @@ export class Output {
     this.requestId = `${idBase}-${requestId}`;
   }
 
-  public Error(message: string): void {
+  public static Error(message: string): void {
     Output.Print(bold(red(`${underline("Error Occurred:")} ${message}`)));
   }
 
